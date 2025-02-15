@@ -1,6 +1,5 @@
 import { Button, Card, FormControl, Input, InputLabel, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import './header.css';
 import { useEffect, useState } from 'react';
 
 const Header = (props) => {

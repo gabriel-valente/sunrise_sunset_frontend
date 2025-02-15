@@ -1,5 +1,5 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const SunTable = ({ sunData }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -7,6 +7,10 @@ const SunTable = ({ sunData }) => {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - sunData.length) : 0;
   const visibleRows = useMemo(() => [...sunData].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage), [sunData, page, rowsPerPage]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [sunData]);
 
   const formatTime = (time) => {
     const [hours, minutes, _seconds] = time.split(':');

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { Paper, Typography } from '@mui/material';
 import timeToHours from '../../helpers/timeToHours';
@@ -9,19 +9,19 @@ const SunChart = ({ sunData }) => {
 
   useMemo(() => {
     // Convert times to decimal
-    let date = sunData.map((elem) => elem.date);
-    let sunrise = sunData.map((elem) => timeToHours(elem.sunrise));
-    let sunset = sunData.map((elem) => timeToHours(elem.sunset));
-    let goldenHour = sunData.map((elem) => timeToHours(elem.golden_hour));
+    const date = sunData.map((elem) => elem.date);
+    const sunrise = sunData.map((elem) => timeToHours(elem.sunrise));
+    const sunset = sunData.map((elem) => timeToHours(elem.sunset));
+    const goldenHour = sunData.map((elem) => timeToHours(elem.golden_hour));
 
     // Filter data for special cases when we dont have information about the sunrise/sunset
-    date = date.filter((_, index) => sunrise[index] && sunset[index] && sunrise[index] < sunset[index]);
-    sunrise = sunrise.filter((_, index) => sunrise[index] && sunset[index] && sunrise[index] < sunset[index]);
-    sunset = sunset.filter((_, index) => sunrise[index] && sunset[index] && sunrise[index] < sunset[index]);
-    goldenHour = goldenHour.filter((_, index) => sunrise[index] && sunset[index] && sunrise[index] < sunset[index]);
+    const filteredDate = date.filter((elem, index) => sunrise[index] && sunset[index] && sunrise[index] < sunset[index]);
+    const filteredSunrise = sunrise.filter((elem, index) => elem && sunset[index] && elem < sunset[index]);
+    const filteredSunset = sunset.filter((elem, index) => sunrise[index] && elem && sunrise[index] < elem);
+    const filteredGoldenHour = goldenHour.filter((elem, index) => sunrise[index] && sunset[index] && sunrise[index] < sunset[index]);
 
     // Calculate daylight range (sunset - sunrise)
-    const daylight = sunset.map((val, index) => val - sunrise[index]);
+    const daylight = filteredSunset.map((val, index) => val - filteredSunrise[index]);
 
     setChartData({
       title: { text: 'Sunlight & Golden Hour Chart' },
@@ -30,12 +30,14 @@ const SunChart = ({ sunData }) => {
         formatter: (params) => {
           return (
             `${params[0].name}<br/>` + // This is the date
-            params.map((p) => `${p.marker} <b>${p.seriesName}:</b> ${hoursToTime(p.seriesName == 'Sunset' ? sunset[p.dataIndex] : p.value)}`).join('<br/>')
+            params
+              .map((p) => `${p.marker} <b>${p.seriesName}:</b> ${hoursToTime(p.seriesName == 'Sunset' ? filteredSunset[p.dataIndex] : p.value)}`)
+              .join('<br/>')
           );
         },
       },
       legend: { data: ['Sunrise', 'Sunset', 'Golden Hour'] },
-      xAxis: { type: 'category', data: date },
+      xAxis: { type: 'category', data: filteredDate },
       yAxis: {
         type: 'value',
         min: 0,
@@ -52,7 +54,7 @@ const SunChart = ({ sunData }) => {
         {
           name: 'Sunrise',
           type: 'line',
-          data: sunrise,
+          data: filteredSunrise,
           stack: 'range',
           itemStyle: { color: '#FFEB3B' },
           lineStyle: { opacity: 0 },
@@ -72,7 +74,7 @@ const SunChart = ({ sunData }) => {
         {
           name: 'Golden Hour',
           type: 'line',
-          data: goldenHour,
+          data: filteredGoldenHour,
           itemStyle: { color: '#ff7f32' },
           lineStyle: { width: 2 },
           smooth: true,
