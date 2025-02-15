@@ -11,7 +11,12 @@ const Header = (props) => {
 
   useEffect(() => {
     if (requestErrors == 'MISSING_PARAMETERS') inputsAreValid(); // This should never happen but the server return this validation so we should check it
-    else if (requestErrors == 'INVALID_LOCATION') formErrors({ ...formErrors, location: 'Could not find this location' }); // If the backend could not find any matching location
+    else if (requestErrors == 'INVALID_LOCATION')
+      formErrors({ ...formErrors, location: 'Could not find this location' }); // If the backend could not find any matching location
+    else if (requestErrors == 'INVALID_DATE') {
+      if (!isValidDate(formData.startDate)) formErrors({ ...formErrors, startDate: 'Start date is invalid' });
+      if (!isValidDate(formData.endDate)) formErrors({ ...formErrors, endDate: 'End date is invalid' });
+    }
   }, [requestErrors]);
 
   const handleSubmit = () => {
@@ -31,11 +36,19 @@ const Header = (props) => {
     return Object.entries(errors).length == 0;
   };
 
+  const isValidDate = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return false;
+
+    const [year, month, day] = dateString.split('-').map(Number);
+    return date.getFullYear() === year && date.getMonth() + 1 === month && date.getDate() === day;
+  };
+
   return (
     <Card className='header-card' variant='elevation' elevation={2}>
       <Grid container spacing={2} marginLeft={4} marginRight={4}>
         <Grid size={12}>
-          <Typography variant='h5'>Sunrise Sunset</Typography>
+          <Typography variant='h5'>Search for sunrise/sunset</Typography>
         </Grid>
 
         <Grid size='grow'>
