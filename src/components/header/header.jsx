@@ -45,8 +45,8 @@ const Header = (props) => {
   };
 
   return (
-    <Card className='header-card' variant='elevation' elevation={2}>
-      <Grid container spacing={2} marginLeft={4} marginRight={4}>
+    <Card variant='elevation' elevation={2}>
+      <Grid container spacing={2} padding={1} marginLeft={4} marginRight={4}>
         <Grid size={12}>
           <Typography variant='h5'>Search for sunrise/sunset</Typography>
         </Grid>
