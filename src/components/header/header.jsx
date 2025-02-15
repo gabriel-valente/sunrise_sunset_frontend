@@ -72,7 +72,7 @@ const Header = (props) => {
             type='date'
             variant='outlined'
             size='small'
-            error={formErrors.location}
+            error={formErrors.startDate}
             value={formData.startDate}
             onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
           />
@@ -88,9 +88,13 @@ const Header = (props) => {
             type='date'
             variant='outlined'
             size='small'
+            error={formData.endDate}
             value={formData.endDate}
             onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
           />
+          <Typography variant='subtitle2' color='error'>
+            {formErrors.endDate}
+          </Typography>
         </Grid>
 
         <Grid container alignItems='end'>
