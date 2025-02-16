@@ -1,8 +1,12 @@
-# React + Vite
+# Sunrise/Sunset React App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+How to run the application:
 
-Currently, two official plugins are available:
+Requirements:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Vite 6.1
+- React 19
+
+Run the application:
+
+- > npm run dev

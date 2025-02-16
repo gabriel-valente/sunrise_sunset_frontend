@@ -36,7 +36,7 @@ const SunChart = ({ sunData }) => {
           );
         },
       },
-      legend: { data: ['Sunrise', 'Sunset', 'Golden Hour'] },
+      legend: { data: ['Sunrise', 'Sunset', 'Golden Hour'], selectedMode: false },
       xAxis: { type: 'category', data: filteredDate },
       yAxis: {
         type: 'value',

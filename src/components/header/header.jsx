@@ -9,13 +9,15 @@ const Header = (props) => {
   const [formErrors, setFormErrors] = useState({ location: '', startDate: '' }); // Errors for inputs
 
   useEffect(() => {
-    if (requestErrors == 'MISSING_PARAMETERS') inputsAreValid(); // This should never happen but the server return this validation so we should check it
-    else if (requestErrors == 'INVALID_LOCATION')
-      formErrors({ ...formErrors, location: 'Could not find this location' }); // If the backend could not find any matching location
-    else if (requestErrors == 'INVALID_DATE') {
-      if (!isValidDate(formData.startDate)) formErrors({ ...formErrors, startDate: 'Start date is invalid' });
-      if (!isValidDate(formData.endDate)) formErrors({ ...formErrors, endDate: 'End date is invalid' });
-    }
+    if (requestErrors == null) return;
+
+    if (requestErrors.error == 'MISSING_PARAMETERS') inputsAreValid(); // This should never happen but the server return this validation so we should check it
+    else if (requestErrors.error == 'INVALID_LOCATION')
+      setFormErrors({ ...formErrors, location: 'Could not find this location' }); // If the backend could not find any matching location
+    else if (requestErrors.error == 'INVALID_DATE') {
+      if (!isValidDate(formData.startDate)) setFormErrors({ ...formErrors, startDate: 'Start date is invalid' });
+      if (!isValidDate(formData.endDate)) setFormErrors({ ...formErrors, endDate: 'End date is invalid' });
+    } else setFormErrors({ ...formErrors, generic: requestErrors.error });
   }, [requestErrors]);
 
   const handleSubmit = () => {
@@ -97,10 +99,13 @@ const Header = (props) => {
           </Typography>
         </Grid>
 
-        <Grid container alignItems='end'>
+        <Grid container direction='column' justifyContent='flex-end' alignItems='flex-end' alignContent='end'>
           <Button variant='contained' onClick={handleSubmit}>
             Submit
           </Button>
+          <Typography variant='subtitle2' color='error'>
+            {formErrors.generic}
+          </Typography>
         </Grid>
       </Grid>
     </Card>
